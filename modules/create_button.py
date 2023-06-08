@@ -1,5 +1,7 @@
 import customtkinter as ctk
+import modules.create_QR_code as m_qr
 import modules.create_app as m_app
+import modules.create_DB as m_DB
 
 create_button = ctk.CTkButton(
     master = m_app.app.FRAME_1,
@@ -7,6 +9,7 @@ create_button = ctk.CTkButton(
     height = 61,
     corner_radius = 15,
     border_width = 3,
+    command = m_qr.generate_qrcode,
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
@@ -22,6 +25,7 @@ bg_button = ctk.CTkButton(
     border_width = 3,
     border_color = "#C1FFC1",
     fg_color = "#282828",
+    command = m_qr.change_back,
     bg_color = "transparent",
     text = "Select background color"
 )
@@ -36,6 +40,7 @@ image_color_button = ctk.CTkButton(
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
+    command = m_qr.change_color,
     text = "Select image color"
 )
 image_color_button.place(x = 26, y = 250)
@@ -72,6 +77,7 @@ confirm_button = ctk.CTkButton(
     height = 61,
     corner_radius = 15,
     border_width = 3,
+    command = m_DB.save_data_registration,
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
@@ -98,6 +104,7 @@ enter_button = ctk.CTkButton(
     height = 61,
     corner_radius = 15,
     fg_color = "#282828",
+    command = m_DB.save_data_autorization,
     bg_color = "transparent",
     border_width=3,
     border_color= "#C1FFC1",
@@ -117,6 +124,3 @@ registration_button = ctk.CTkButton(
     command = m_app.app.show_frame2)
 
 registration_button.place(x = 221, y = 433)
-
-
-
