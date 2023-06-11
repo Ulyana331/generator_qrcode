@@ -93,11 +93,11 @@ class App(ctk.CTk):
                                   font = font_label)
         self.LABEL_AUTORIZATION.place(x = 200, y = 10)
 
-        self.show_frame1()
+        self.show_frame3()
         
     def show_frame1(self):
         self.FRAME_1.pack()
-        self.FRAME_2.pack_forget()
+        self.FRAME_3.pack_forget()
 
     def show_frame2(self):
         self.FRAME_2.pack()

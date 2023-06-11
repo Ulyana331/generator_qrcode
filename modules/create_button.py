@@ -54,7 +54,8 @@ add_logo_button = ctk.CTkButton(
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
-    text = "Add logo to QR-code"
+    text = "Add logo to QR-code",
+    command = m_qr.add_logo
 )
 add_logo_button.place(x = 26, y = 340)
 
