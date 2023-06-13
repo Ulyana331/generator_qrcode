@@ -2,6 +2,7 @@ import customtkinter as ctk
 import modules.create_QR_code as m_qr
 import modules.create_app as m_app
 import modules.create_DB as m_DB
+import modules.create_font as m_font
 
 create_button = ctk.CTkButton(
     master = m_app.app.FRAME_1,
@@ -125,3 +126,19 @@ registration_button = ctk.CTkButton(
     command = m_app.app.show_frame2)
 
 registration_button.place(x = 221, y = 433)
+
+add_photo_button = ctk.CTkButton(
+    master = m_app.app.FRAME_1,
+    width = 70,
+    height = 45,
+    corner_radius = 15,
+    fg_color = "#282828",
+    bg_color = "transparent",
+    text_color = "white",
+    text = "Add photo",
+    font = m_font.font_entry,
+    border_color = "#C1FFC1",
+    border_width = 3,
+    command = m_qr.add_photo,
+)
+add_photo_button.place(x = 420, y = 100)
