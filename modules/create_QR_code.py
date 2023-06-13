@@ -21,7 +21,10 @@ def change_color():
     if color[1]:
         qrcode_color = color[1]
 
+count = 1
 def generate_qrcode():
+    global count
+    count += 1
     url_text = m_entry.url_entry.get()
     email = m_entry.text_email1.get()
     user_folder = (f"media/{email}")
@@ -34,7 +37,7 @@ def generate_qrcode():
     qr.make(fit = True)
     image = qr.make_image(fill_color = qrcode_color, back_color = background_color)
     image = image.resize((400, 400))
-    image_path = os.path.join(user_folder, "qrcode.png")
+    image_path = os.path.join(user_folder, f"qrcode{count}.png")
     image.save(image_path)
     imageTk = ImageTk.PhotoImage(image)
     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
