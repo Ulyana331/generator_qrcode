@@ -93,6 +93,35 @@ class App(ctk.CTk):
                                   font = font_label)
         self.LABEL_AUTORIZATION.place(x = 200, y = 10)
 
+        self.FRAME_4 = m_frame.MyFrame(text = "", 
+                                       master = self,
+                                       width = 696,
+                                       height = 515,
+                                       border_width = 5,
+                                       fg_color = "#8470FF",
+                                       border_color = "#1E1E1E",
+                                       corner_radius = 15)
+        
+        self.FRAME_QR_CODE2 = m_frame.MyFrame(text = "", 
+                                       master = self.FRAME_4,
+                                       width = 240,
+                                       height = 240,
+                                       border_width = 5,
+                                       fg_color = "#282828",
+                                       border_color = "#C1FFC1",
+                                       bg_color = "#8470FF",
+                                       corner_radius = 15)
+        self.FRAME_QR_CODE2.place(x = 431, y = 140)
+        self.frame_list_qrcode = m_frame.MyFrame(text = "", 
+                                       master = self.FRAME_4,
+                                       width = 160,
+                                       height = 240,
+                                       border_width = 2,
+                                       fg_color = "#282828",
+                                       border_color = "#C1FFC1",
+                                       bg_color = "#8470FF",
+                                       corner_radius = 15)
+        self.frame_list_qrcode.place(x = 20, y = 140)
         self.show_frame3()
         
     def show_frame1(self):
@@ -106,5 +135,13 @@ class App(ctk.CTk):
     def show_frame3(self):
         self.FRAME_3.pack()
         self.FRAME_2.pack_forget()
+
+    def show_frame4(self):
+        self.FRAME_4.pack()
+        self.FRAME_1.pack_forget()
+        
+    def show_frame_1(self):
+        self.FRAME_1.pack()
+        self.FRAME_4.pack_forget()
         
 app = App(696, 515)

@@ -1,10 +1,14 @@
 import qrcode 
 import os
-from tkinter import colorchooser
-from PIL import Image, ImageTk
+from tkinter import colorchooser, Listbox
+from PIL import Image, ImageTk, ImageDraw
 import modules.create_entry as m_entry
 import customtkinter as ctk
 import modules.create_app as m_app
+from qrcode.image.styledpil import StyledPilImage
+
+current_index = 0
+list_qrcodes = []
 
 background_color = "white"
 qrcode_color = "black"
@@ -23,11 +27,13 @@ def change_color():
 
 count = 1
 def generate_qrcode():
-    global count
+    global count, current_index
     count += 1
+
     url_text = m_entry.url_entry.get()
     email = m_entry.text_email1.get()
     user_folder = (f"media/{email}")
+    
     os.makedirs(user_folder, exist_ok = True)
     qr = qrcode.QRCode(version = 1,
                        error_correction = qrcode.constants.ERROR_CORRECT_H,
@@ -43,48 +49,14 @@ def generate_qrcode():
     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
     label_image.place(x = 5,y = 5)
 
+    if current_index < len(list_qrcodes):
+        value = list_qrcodes[current_index]
+        listbox_images.insert("end", value)
+        current_index += 1
 
+listbox_images = Listbox(m_app.app.frame_list_qrcode, width = 37, height = 10 ,bg = "#1E1E1E", fg = "white")  
+listbox_images.place(x = 30,y = 1080)
 
-
-
-def add_logo():
-    # file_path = ctk.filedialog.askopenfilename(initialdir = "images/", filetypes = (("JPEG files", "*.png;*.jpg"),))
-    # url_text = m_entry.url_entry.get()
-    # qr = qrcode.QRCode(version = 1,
-    #                    error_correction = qrcode.constants.ERROR_CORRECT_H,
-    #                    box_size = 6,
-    #                    border = 4)
-    # qr.add_data(url_text)
-    # qr.make(fit = True)
-
-    # image = qr.make_image(fill_color = "black", back_color = "white")
-
-    # logo_image = Image.open(file_path).convert("RGBA")
-
-    # # Масштабирование логотипа
-    # logo_size = image.size[0] // 4
-    # logo_image = logo_image.resize((logo_size, logo_size), Image.ANTIALIAS)
-
-    # # Создание нового изображения с альфа-каналом
-    # qr_code_with_logo = Image.new("RGBA", image.size)
-
-    # # Копирование QR-кода на изображение с альфа-каналом
-    # qr_code_with_logo.paste(image, (0, 0))
-
-    # # Размещение логотипа посередине QR-кода
-    # position = (
-    #     (qr_code_with_logo.size[0] - logo_image.size[0]) // 2,
-    #     (qr_code_with_logo.size[1] - logo_image.size[1]) // 2,
-    # )
-    # qr_code_with_logo.alpha_composite(logo_image, position)
-
-    # # Сохранение QR-кода с логотипом
-    # qr_code_with_logo.save("qr_code_with_logo.png")
-
-    # imageTk = ImageTk.PhotoImage(qr_code_with_logo)
-    # label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
-    # label_image.place(x = 5,y = 5)
-    pass
 
 
 def add_photo():
@@ -94,3 +66,61 @@ def add_photo():
     imageTk = ImageTk.PhotoImage(image)
     label_image = ctk.CTkLabel(m_app.app.FRAME_CAB, image = imageTk, text = "")
     label_image.place(x = 6,y = 6)
+
+def circle_qrcode():
+    global count
+    count += 1
+    url_text = m_entry.url_entry.get()
+
+    email = m_entry.text_email1.get()
+    user_folder = (f"media/{email}")
+    os.makedirs(user_folder, exist_ok = True)
+    
+    qr = qrcode.QRCode(version = 1,
+                       error_correction = qrcode.constants.ERROR_CORRECT_H,
+                       box_size = 6,
+                       border = 4)
+    qr.add_data(url_text)
+    qr.make(fit = True)
+
+    qr_matrix = qr.get_matrix()
+    circle_size = 10
+    circle_color = qrcode_color
+    image_size = len(qr_matrix) * circle_size
+    image = Image.new("RGB", (image_size, image_size), background_color)
+    draw = ImageDraw.Draw(image)
+    for row in range(len(qr_matrix)):
+        for col in range(len(qr_matrix[row])):
+            if qr_matrix[row][col]:
+                x = circle_size * col
+                y = row * circle_size
+                draw.ellipse((x, y, x + circle_size, y + circle_size), fill = circle_color)
+    image = image.resize((392, 392))
+    image_path = os.path.join(user_folder, f"qrcode{count}.png")
+    image.save(image_path)
+    imageTk = ImageTk.PhotoImage(image)
+    label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
+    label_image.place(x = 5,y = 5)
+
+def add_logo():
+    global count
+    count += 1
+    url_text = m_entry.url_entry.get()
+
+    email = m_entry.text_email1.get()
+    user_folder = (f"media/{email}")
+    os.makedirs(user_folder, exist_ok = True)
+    
+    qr = qrcode.QRCode(version = 1,
+                       error_correction = qrcode.constants.ERROR_CORRECT_H,
+                       box_size = 6,
+                       border = 4)
+    qr.add_data(url_text)
+    qr.make(fit = True)
+    image = qr.make_image(image_factory = StyledPilImage, embeded_image_path = "logo.png")
+    image = image.resize((392, 392))
+    image_path = os.path.join(user_folder, f"qrcode{count}.png")
+    image.save(image_path)
+    imageTk = ImageTk.PhotoImage(image)
+    label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
+    label_image.place(x = 5,y = 5)

@@ -69,7 +69,8 @@ design_button = ctk.CTkButton(
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
-    text = "Select image design QR-code"
+    text = "Select image design QR-code",
+    command = m_qr.circle_qrcode
 )
 design_button.place(x = 26, y = 430)
 
@@ -139,6 +140,38 @@ add_photo_button = ctk.CTkButton(
     font = m_font.font_entry,
     border_color = "#C1FFC1",
     border_width = 3,
-    command = m_qr.add_photo,
+    command = m_qr.add_photo
 )
 add_photo_button.place(x = 420, y = 100)
+
+personal_area_button = ctk.CTkButton(
+    master = m_app.app.FRAME_1,
+    width = 70,
+    height = 45,
+    corner_radius = 15,
+    fg_color = "#282828",
+    bg_color = "transparent",
+    text_color = "white",
+    text = "Personal area",
+    font = m_font.font_entry,
+    border_color = "#C1FFC1",
+    border_width = 3,
+    command = m_app.app.show_frame4
+)
+personal_area_button.place(x = 420, y = 40)
+
+back_button = ctk.CTkButton(
+    master = m_app.app.FRAME_4,
+    width = 80,
+    height = 45,
+    corner_radius = 15,
+    fg_color = "#282828",
+    bg_color = "transparent",
+    text_color = "white",
+    text = "Back",
+    font = m_font.font_entry,
+    border_color = "#C1FFC1",
+    border_width = 3,
+    command = m_app.app.show_frame_1
+)
+back_button.place(x = 20, y = 440)
