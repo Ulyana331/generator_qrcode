@@ -1,5 +1,15 @@
 import customtkinter as ctk
 import modules.create_frame as m_frame 
+import os
+
+def search_path(name_file):
+    path = __file__.split("\\") 
+    for i in range(2):
+        del path[-1]
+    path = "\\".join(path)
+    path = os.path.join(path, name_file)
+    print(path)
+    return path
 
 class App(ctk.CTk):
     def __init__(self, app_width, app_height):
@@ -11,6 +21,7 @@ class App(ctk.CTk):
         self.geometry(f"{self.APP_WIDTH}x{self.APP_HEIGHT}+{600}+{160}")
         self.resizable(False,False)
         self.title("Generator QR-code")
+        self.iconbitmap(search_path("icon.ico"))
         self.FRAME_1 = m_frame.MyFrame(text = "", 
                                        master = self,
                                        width = 696,
@@ -111,17 +122,17 @@ class App(ctk.CTk):
                                        border_color = "#C1FFC1",
                                        bg_color = "#8470FF",
                                        corner_radius = 15)
-        self.FRAME_QR_CODE2.place(x = 431, y = 140)
+        self.FRAME_QR_CODE2.place(x = 431, y = 100)
         self.frame_list_qrcode = m_frame.MyFrame(text = "", 
                                        master = self.FRAME_4,
-                                       width = 160,
-                                       height = 240,
+                                       width = 200,
+                                       height = 280,
                                        border_width = 2,
                                        fg_color = "#282828",
                                        border_color = "#C1FFC1",
                                        bg_color = "#8470FF",
                                        corner_radius = 15)
-        self.frame_list_qrcode.place(x = 20, y = 140)
+        self.frame_list_qrcode.place(x = 20, y = 100)
         self.show_frame3()
         
     def show_frame1(self):

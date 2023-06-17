@@ -15,17 +15,14 @@ def save_data_autorization():
     password = m_entry.text_password1.get()
     cursor_Auto.execute("INSERT INTO Users(email, password) VALUES (?,?)",(email, password))
     connection_Auto.commit()
-    print("данні збережено!")
 
     quarry = "SELECT * FROM Users WHERE email = ? AND password = ?"
     cursor_reg.execute(quarry,(email, password))
     user = cursor_reg.fetchone()
 
     if user is not None:
-        print("Ви авторизовані")
         m_app.app.show_frame1()
     else:
-        print("Ви не зареєстровані")
         label_not_auto = ctk.CTkLabel(master = m_app.app.FRAME_3, text = 'No such account', font = m_font.font_auto)
         label_not_auto.place(x = 240,y= 90)
         label_not_auto2 = ctk.CTkLabel(master = m_app.app.FRAME_3, text = 'Register!', font = m_font.font_auto)
@@ -59,7 +56,6 @@ def save_data_registration():
 cursor_Auto.execute("SELECT email, password, COUNT(*) FROM users GROUP BY email, password")
 duplicate_rows = cursor_Auto.fetchall()
 
-# Удалить повторяющиеся записи
 for row in duplicate_rows:
     email = row[0]
     password = row[1]

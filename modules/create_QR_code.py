@@ -5,28 +5,27 @@ from PIL import Image, ImageTk, ImageDraw
 import modules.create_entry as m_entry
 import customtkinter as ctk
 import modules.create_app as m_app
-from qrcode.image.styledpil import StyledPilImage
-
-list_qrcodes = []
+import modules.create_font as m_font
+from qrcode import constants
 
 background_color = "white"
 qrcode_color = "black"
-def change_back():
+def change_bg():
     global background_color
     color = colorchooser.askcolor(title = "select color")
     if color[1]:
         background_color = color[1]
     
 
-def change_color():
+def change_qr_color():
     global qrcode_color
     color = colorchooser.askcolor(title = "select color")
     if color[1]:
         qrcode_color = color[1]
 
-count = 1
+count = 0
 def generate_qrcode():
-    global count, current_index
+    global count
     count += 1
 
     url_text = m_entry.url_entry.get()
@@ -35,24 +34,23 @@ def generate_qrcode():
     
     os.makedirs(user_folder, exist_ok = True)
     qr = qrcode.QRCode(version = 1,
-                       error_correction = qrcode.constants.ERROR_CORRECT_H,
-                       box_size = 6,
+                       error_correction = constants.ERROR_CORRECT_H,
+                       box_size = 5,
                        border = 4)
     qr.add_data(url_text)
     qr.make(fit = True)
     image = qr.make_image(fill_color = qrcode_color, back_color = background_color)
-    image = image.resize((400, 400))
+    image = image.resize((404, 404))
+
     image_path = os.path.join(user_folder, f"qrcode{count}.png")
     image.save(image_path)
-    list_qrcodes.append(image_path)
-    print(list_qrcodes)
+
     imageTk = ImageTk.PhotoImage(image)
     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
     label_image.place(x = 5,y = 5)
-    update_image_list()
 
 
-def add_photo():
+def add_photo_area():
     file_path = ctk.filedialog.askopenfilename(initialdir = "images/", filetypes = (("JPEG files", "*.png;*.jpg"),))
     image = Image.open(file_path)
     image = image.resize((188,188))
@@ -70,8 +68,8 @@ def circle_qrcode():
     os.makedirs(user_folder, exist_ok = True)
     
     qr = qrcode.QRCode(version = 1,
-                       error_correction = qrcode.constants.ERROR_CORRECT_H,
-                       box_size = 6,
+                       error_correction = constants.ERROR_CORRECT_H,
+                       box_size = 5,
                        border = 4)
     qr.add_data(url_text)
     qr.make(fit = True)
@@ -95,100 +93,79 @@ def circle_qrcode():
     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
     label_image.place(x = 5,y = 5)
 
+
+listbox_images = Listbox(m_app.app.frame_list_qrcode, width = 30, height = 19,bg = "#1E1E1E", fg = "white", font = m_font.font_reg)  
+listbox_images.place(x = 10,y = 10)
+
+
+processed_files = []
+def update_image_list():
+    global processed_files
+    email = m_entry.text_email1.get()
+    folder_path = f"media/{email}"
+    current_files = os.listdir(folder_path)
+    new_files = [file for file in current_files if file not in processed_files]
+    for file in new_files:
+        file_path = os.path.join(folder_path, file)
+        listbox_images.insert(ctk.END, file_path)
+        processed_files.append(file)
+
+
+def personal_area():
+    m_app.app.show_frame4()
+    update_image_list()
+
+def display_image(event):
+    selected_index = listbox_images.curselection()
+    if selected_index:
+        image_path = listbox_images.get(selected_index)
+        image = Image.open(image_path)
+        image = image.resize((402, 402))
+        tk_image = ImageTk.PhotoImage(image)
+        label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE2, image = tk_image, text = "")
+        label_image.place(x = 5,y = 5)
+
+listbox_images.bind("<<ListboxSelect>>", display_image)
+
+
 def add_logo():
     global count
     count += 1
+    logo_path = ctk.filedialog.askopenfilename(initialdir = "images/", filetypes = (("JPEG files", "*.png;*.jpg"),))
+    
     url_text = m_entry.url_entry.get()
 
     email = m_entry.text_email1.get()
     user_folder = (f"media/{email}")
     os.makedirs(user_folder, exist_ok = True)
-    
-    qr = qrcode.QRCode(version = 1,
-                       error_correction = qrcode.constants.ERROR_CORRECT_H,
-                       box_size = 6,
-                       border = 4)
+
+    qr = qrcode.QRCode(
+    version=1,
+    error_correction=constants.ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+    )
     qr.add_data(url_text)
-    qr.make(fit = True)
-    image = qr.make_image(image_factory = StyledPilImage, embeded_image_path = "logo.png")
-    image = image.resize((392, 392))
+    qr.make(fit=True)
+    qr_image = qr.make_image(fill_color = qrcode_color, back_color = background_color).convert("RGB")
+
+    logo_image = Image.open(logo_path)
+
+    logo_size = (100, 100)
+    logo_image = logo_image.resize(logo_size)
+
+    qr_width, qr_height = qr_image.size
+    logo_width, logo_height = logo_image.size
+    logo_position = ((qr_width - logo_width) // 2, (qr_height - logo_height) // 2)
+
+    qr_image.paste(logo_image, logo_position)
     image_path = os.path.join(user_folder, f"qrcode{count}.png")
-    image.save(image_path)
-    imageTk = ImageTk.PhotoImage(image)
+    qr_image.save(image_path)
+    qr_image = qr_image.resize((404,404))
+
+    imageTk = ImageTk.PhotoImage(qr_image)
     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
     label_image.place(x = 5,y = 5)
 
-listbox_images = Listbox(m_app.app.frame_list_qrcode, width = 37, height = 40 ,bg = "#1E1E1E", fg = "white")  
-listbox_images.place(x = 10,y = 10)
-
-folder_path = "media/qwerty"
-processed_files = []
-def update_image_list():
-    global processed_files
-    current_files = os.listdir(folder_path)
-    new_files = [file for file in current_files if file not in processed_files]
-    for file in new_files:
-        listbox_images.insert(ctk.END, file)
-        processed_files.append(f"media/qwerty/{file}")
-        print(processed_files)
-def update_listbox():
-    update_image_list()
-
-# def show_qrcode():
-#     selected_index = listbox_images.curselection()
-#     if selected_index:
-#         selected_item = list_qrcodes[selected_index[0]]
-#         image_path = ctk.CTkImage(light_image = Image.open(selected_item), size = (200,200))
-#         image = Image.open(image_path)
-#         imageTk = ImageTk.PhotoImage(image)
-#         label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = imageTk, text = "")
-#         label_image.place(x = 5,y = 5)
-#     else:
-#         print("Nothing")
-
-
-
-
-
-# folder_path = "media/qwerty"
-
-# # Функция для загрузки и отображения изображения на фрейме
-# def show_image(event):
-#     # Получение выбранного элемента из Listbox
-#     selected_item = listbox_images.get(listbox_images.curselection())
-    
-#     # Полный путь к выбранному изображению
-#     image_path = folder_path + "/" + selected_item
-    
-#     # Загрузка изображения
-#     image = Image.open(image_path)
-    
-#     # Масштабирование изображения по размерам окна
-#     image = image.resize((m_app.app.winfo_width(), m_app.app.winfo_height()))
-    
-#     # Создание объекта ImageTk для отображения на фрейме
-#     image_tk = ImageTk.PhotoImage(image)
-#     label_image = ctk.CTkLabel(m_app.app.FRAME_QR_CODE, image = image_tk, text = "")
-#     label_image.place(x = 5,y = 5)
-#     # Обновление изображения на фрейме
-#     # image_label.configure(image=image_tk)
-#     # image_label.image = image_tk
-
-# # Привязка события нажатия кнопки мыши к функции show_image
-# listbox_images.bind("<Button-1>", show_image)
-
-# # Заполнение Listbox списком изображений из папки
-# for filename in os.listdir(folder_path):
-#     listbox_images.insert(ctk.END, filename)
-
-
-def show():
-    for name in processed_files:
-        processed_files.insert(ctk.END, name)
-
-show_button = ctk.CTkButton(
-    master = m_app.app.FRAME_4,
-    text = "Show qr-code",
-    command = show
-)
-show_button.place(x = 231,y = 429)
+label_qrcodes = ctk.CTkLabel(master = m_app.app.FRAME_4,text = "Your qr-codes", font = m_font.font_auto, text_color = "black")
+label_qrcodes.place(x = 250, y = 20)

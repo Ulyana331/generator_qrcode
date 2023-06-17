@@ -26,7 +26,7 @@ bg_button = ctk.CTkButton(
     border_width = 3,
     border_color = "#C1FFC1",
     fg_color = "#282828",
-    command = m_qr.change_back,
+    command = m_qr.change_bg,
     bg_color = "transparent",
     text = "Select background color"
 )
@@ -41,7 +41,7 @@ image_color_button = ctk.CTkButton(
     border_color = "#C1FFC1",
     fg_color = "#282828",
     bg_color = "transparent",
-    command = m_qr.change_color,
+    command = m_qr.change_qr_color,
     text = "Select image color"
 )
 image_color_button.place(x = 26, y = 250)
@@ -140,7 +140,7 @@ add_photo_button = ctk.CTkButton(
     font = m_font.font_entry,
     border_color = "#C1FFC1",
     border_width = 3,
-    command = m_qr.add_photo
+    command = m_qr.add_photo_area
 )
 add_photo_button.place(x = 420, y = 100)
 
@@ -156,7 +156,7 @@ personal_area_button = ctk.CTkButton(
     font = m_font.font_entry,
     border_color = "#C1FFC1",
     border_width = 3,
-    command = m_app.app.show_frame4
+    command = m_qr.personal_area
 )
 personal_area_button.place(x = 420, y = 40)
 
