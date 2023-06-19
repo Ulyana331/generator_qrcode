@@ -70,7 +70,7 @@ design_button = ctk.CTkButton(
     fg_color = "#282828",
     bg_color = "transparent",
     text = "Select image design QR-code",
-    command = m_qr.circle_qrcode
+    command = m_qr.triangle
 )
 design_button.place(x = 26, y = 430)
 

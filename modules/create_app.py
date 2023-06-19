@@ -82,7 +82,7 @@ class App(ctk.CTk):
                                   text = "Registration",
                                   text_color = "black",
                                   font = font_label)
-        self.LABEL_REGISTRATION.place(x = 200, y = 10)
+        self.LABEL_REGISTRATION.place(x = 225, y = 5)
 
 
         self.FRAME_3 = m_frame.MyFrame(text = "", 

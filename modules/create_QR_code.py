@@ -7,6 +7,10 @@ import customtkinter as ctk
 import modules.create_app as m_app
 import modules.create_font as m_font
 from qrcode import constants
+import re
+
+import cv2
+import numpy as np
 
 background_color = "white"
 qrcode_color = "black"
@@ -169,3 +173,18 @@ def add_logo():
 
 label_qrcodes = ctk.CTkLabel(master = m_app.app.FRAME_4,text = "Your qr-codes", font = m_font.font_auto, text_color = "black")
 label_qrcodes.place(x = 250, y = 20)
+
+
+def validate_password_input(text):
+    pattern = f'^[a-zA-Z0-9]+$'
+    if re.match(pattern, text) or text == '':
+        return True
+    else:
+        return False
+    
+
+validate_func = m_app.app.register(validate_password_input)
+m_entry.password_entry.configure(validate="key", validatecommand=(validate_func, '%P'))
+m_entry.password1_entry.configure(validate="key", validatecommand=(validate_func, '%P'))
+m_entry.password2_entry.configure(validate="key", validatecommand=(validate_func, '%P'))
+
